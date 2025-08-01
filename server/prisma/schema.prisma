@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -26,10 +25,10 @@ model User{
 model ShortLink{
   id  Int @id @default(autoincrement())
   original_url      String
-  short_code        String      @unique
+  alias        String      @unique
   click_count       Int         @default(0)
   created_at        DateTime    @default(now())
-  expires_at        DateTime    
+  expires_in        Int         @default(0)
   userId            Int
   user              User        @relation(fields: [userId], references: [id])
   ClickLog          ClickLog[]
