@@ -1,4 +1,4 @@
-import { createShortLink, deleteShortLink } from "../services/shortenerServices.js";
+import { createShortLink, deleteShortLink, redirectShortLink } from "../services/shortenerServices.js";
 import dotenv from 'dotenv'
 
 export const shorten = async(req,res) => {
@@ -29,6 +29,19 @@ export const deleteLink = async (req,res) => {
       message: "Short link deleted succesfully",
       shortlink_id: `${shortlink_id}`
     })
+  } catch (error) {
+    if (error.message === "Short link not found") {
+      return res.status(400).json({ error: error.message })
+    }
+    return res.status(500).json({ error })
+  }
+}
+
+export const redirectToShortLink = async (req,res) => {
+  const {alias} = req.params
+
+  try {
+    res.redirect(await redirectShortLink(alias,req))
   } catch (error) {
     if (error.message === "Short link not found") {
       return res.status(400).json({ error: error.message })

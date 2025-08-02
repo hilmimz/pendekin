@@ -29,15 +29,43 @@ export const createShortLink = async(original_url) => {
 }
 
 export const deleteShortLink = async (shortlink_id) => {
-  const isShortLinkExists = await prisma.shortLink.findUnique({
+  const existingShortLink = await prisma.shortLink.findUnique({
       where: { id:shortlink_id },
   })
 
-  if (!isShortLinkExists) {
+  if (!existingShortLink) {
     throw new Error("Short link not found")
   }
 
   return await prisma.shortLink.delete({
     where: {id:shortlink_id}
   })
+}
+
+export const redirectShortLink = async (alias,req) => {
+  const existingShortLink = await prisma.shortLink.findUnique({
+      where: { alias },
+  })
+
+  if (!existingShortLink) {
+    throw new Error("Short link not found")
+  }
+
+  await prisma.clickLog.create({
+    data: {
+      ip_address: req.ip || req.connection.remoteAddress,
+      user_agent: req.headers['user-agent'],
+      referer:req.headers.referer,
+      shortlinkId: existingShortLink.id
+    }
+  })
+
+  await prisma.shortLink.update({
+    where: {id:existingShortLink.id},
+    data: {
+      click_count: {increment: 1}
+    }
+  })
+
+  return existingShortLink.original_url
 }
