@@ -27,3 +27,17 @@ export const createShortLink = async(original_url) => {
   })
 
 }
+
+export const deleteShortLink = async (shortlink_id) => {
+  const isShortLinkExists = await prisma.shortLink.findUnique({
+      where: { id:shortlink_id },
+  })
+
+  if (!isShortLinkExists) {
+    throw new Error("Short link not found")
+  }
+
+  return await prisma.shortLink.delete({
+    where: {id:shortlink_id}
+  })
+}
