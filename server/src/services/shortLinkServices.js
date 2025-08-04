@@ -5,6 +5,7 @@ function generateAlias(length = 6) {
   return nanoid(length)
 }
 
+// =================== Short Link CRUD (START) =============================
 export const createShortLink = async(original_url) => {
   let alias
   while (true) {
@@ -42,6 +43,40 @@ export const deleteShortLink = async (shortlink_id) => {
   })
 }
 
+export const updateShortLink = async (shortlink_id, alias) => {
+  const existingShortLink = await prisma.shortLink.findUnique({
+      where: { id:shortlink_id },
+  })
+
+  if (!existingShortLink) {
+    throw new Error("Short link not found")
+  }
+
+  if (alias.length < 5) {
+    throw new Error("Alias minimum length is 5")
+  }
+
+  const existingAlias = await prisma.shortLink.findUnique({
+      where: { alias },
+  })
+
+  if (existingAlias) {
+    throw new Error("Alias is not available")
+  }
+
+  await prisma.shortLink.update({
+    where: {id:existingShortLink.id},
+    data: {
+      alias
+    }
+  })
+
+}
+
+// =================== Short Link CRUD (END) =============================
+
+
+// =================== Redirect Link (START) =============================
 export const redirectShortLink = async (alias,req) => {
   const existingShortLink = await prisma.shortLink.findUnique({
       where: { alias },
@@ -69,3 +104,4 @@ export const redirectShortLink = async (alias,req) => {
 
   return existingShortLink.original_url
 }
+// =================== Redirect Link (END) =============================

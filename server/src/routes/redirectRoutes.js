@@ -1,5 +1,5 @@
 import express from 'express'
-import {redirectToShortLink} from '../controllers/shortenerControllers.js'
+import {redirectToShortLink} from '../controllers/shortLinkControllers.js'
 
 const router = express.Router()
 
