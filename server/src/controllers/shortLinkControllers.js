@@ -1,4 +1,4 @@
-import { createShortLink, deleteShortLink, getStats, redirectShortLink, updateShortLink } from "../services/shortLinkServices.js";
+import { createShortLink, deleteShortLink, getClickLog, getStats, redirectShortLink, updateShortLink } from "../services/shortLinkServices.js";
 import dotenv from 'dotenv'
 
 function handleMissingRequestBody(req,res) {
@@ -88,6 +88,27 @@ export const handleGetStats = async (req,res) => {
     const result = await getStats(shortlink_id)
     res.json({
       click_count: result
+    })
+  } catch (error) {
+    if (error.message === "Short link not found") {
+      return res.status(400).json({ error: error.message })
+    }
+    return res.status(500).json({ error })
+  }
+}
+
+export const handleGetClickLog = async (req,res) => {
+  handleMissingRequestBody(req,res)
+  const {shortlink_id} = req.body
+
+  if (!shortlink_id) {
+    return res.status(400).json({ error: 'Shortlink ID is required' });
+  }
+
+  try {
+    const result = await getClickLog(shortlink_id)
+    res.json({
+      click_log: result
     })
   } catch (error) {
     if (error.message === "Short link not found") {

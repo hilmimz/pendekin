@@ -84,6 +84,19 @@ export const getStats = async (shortlink_id) => {
   return existingShortLink.click_count
 }
 
+export const getClickLog = async (shortlink_id) => {
+  const existingShortLink = await prisma.shortLink.findUnique({
+      where: { id:shortlink_id },
+  })
+
+  if (!existingShortLink) {
+    throw new Error("Short link not found")
+  }
+
+  return await prisma.clickLog.findMany({
+    where: {shortlinkId:shortlink_id}
+  })
+}
 // =================== Short Link CRUD (END) =============================
 
 
