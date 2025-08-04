@@ -1,4 +1,4 @@
-import { createShortLink, deleteShortLink, redirectShortLink, updateShortLink } from "../services/shortLinkServices.js";
+import { createShortLink, deleteShortLink, getStats, redirectShortLink, updateShortLink } from "../services/shortLinkServices.js";
 import dotenv from 'dotenv'
 
 function handleMissingRequestBody(req,res) {
@@ -28,7 +28,7 @@ export const deleteLink = async (req,res) => {
   const {shortlink_id} = req.body
 
   if (!shortlink_id) {
-    return res.status(400).json({ error: 'ID is required' });
+    return res.status(400).json({ error: 'Shortlink ID is required' });
   }
 
   try {
@@ -51,7 +51,7 @@ export const handleUpdateShortLink = async (req,res) => {
   const {shortlink_id,alias} = req.body
 
   if (!shortlink_id) {
-    return res.status(400).json({ error: 'ID is required' });
+    return res.status(400).json({ error: 'Shortlink ID is required' });
   }
   if (!alias) {
     return res.status(400).json({ error: 'Alias is required' });
@@ -71,6 +71,26 @@ export const handleUpdateShortLink = async (req,res) => {
       return res.status(400).json({ error: error.message })
     }
     if (error.message === "Alias minimum length is 5") {
+      return res.status(400).json({ error: error.message })
+    }
+    return res.status(500).json({ error })
+  }
+}
+
+export const handleGetStats = async (req,res) => {
+  const {shortlink_id} = req.body
+
+  if (!shortlink_id) {
+    return res.status(400).json({ error: 'Shortlink ID is required' });
+  }
+
+  try {
+    const result = await getStats(shortlink_id)
+    res.json({
+      click_count: result
+    })
+  } catch (error) {
+    if (error.message === "Short link not found") {
       return res.status(400).json({ error: error.message })
     }
     return res.status(500).json({ error })

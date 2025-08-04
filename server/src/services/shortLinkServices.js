@@ -70,7 +70,18 @@ export const updateShortLink = async (shortlink_id, alias) => {
       alias
     }
   })
+}
 
+export const getStats = async (shortlink_id) => {
+  const existingShortLink = await prisma.shortLink.findUnique({
+      where: { id:shortlink_id },
+  })
+
+  if (!existingShortLink) {
+    throw new Error("Short link not found")
+  }
+
+  return existingShortLink.click_count
 }
 
 // =================== Short Link CRUD (END) =============================

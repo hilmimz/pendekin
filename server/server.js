@@ -11,7 +11,7 @@ const port = process.env.SERVER_PORT
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/shorten', shortLinkRoutes);
+app.use('/api/shortlink', shortLinkRoutes);
 app.use('/', redirectRoutes);
 
 app.listen(port, () => {
