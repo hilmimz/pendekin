@@ -3,27 +3,34 @@ import dotenv from 'dotenv'
 
 function handleMissingRequestBody(req,res) {
   if (!req.body || typeof req.body !== 'object') {
-    return res.status(400).json({ error: 'Request body is missing or invalid' });
+    res.status(400).json({ error: 'Request body is missing or invalid' });
+    return false
   }
+  return true
 }
 
 function validateAlias(alias,res) {
   if (alias.length >= 30) {
-    return res.status(400).json({error: 'The Alias must not be greater than 30 characters.'})
+    res.status(400).json({error: 'The Alias must not be greater than 30 characters.'})
+    return false
   }
 
   if (alias.length < 5) {
-    return res.status(400).json({error: 'The Alias must be greater than 5 characters.'})
+    res.status(400).json({error: 'The Alias must be greater than 5 characters.'})
+    return false
   }
 
   const regex = /^[a-zA-Z0-9]+$/;
   if (!regex.test(alias)){
-    return res.status(400).json({error: 'The Alias has invalid format.'})
+    res.status(400).json({error: 'The Alias has invalid format.'})
+    return false
   }
+  return true
 }
 
 export const shorten = async(req,res) => {
-  handleMissingRequestBody(req,res)
+  if (handleMissingRequestBody(req, res)) return;
+
   const {original_url} = req.body
 
   if (!original_url) {
@@ -39,7 +46,8 @@ export const shorten = async(req,res) => {
 }
 
 export const deleteLink = async (req,res) => {
-  handleMissingRequestBody(req,res)
+  if (handleMissingRequestBody(req, res)) return;
+
   const {shortlink_id} = req.body
 
   if (!shortlink_id) {
@@ -61,8 +69,7 @@ export const deleteLink = async (req,res) => {
 }
 
 export const handleUpdateShortLink = async (req,res) => {
-  const missing = handleMissingRequestBody(req,res)
-  if (missing) return
+  if (handleMissingRequestBody(req, res)) return;
 
   const {shortlink_id,alias} = req.body
 
@@ -73,8 +80,7 @@ export const handleUpdateShortLink = async (req,res) => {
     return res.status(400).json({ error: 'Alias is required' });
   }
 
-  const invalid = validateAlias(alias,res)
-  if (invalid) return
+  if (validateAlias(alias,res)) return;
 
   try {
     const result = await updateShortLink(shortlink_id,alias)
@@ -97,6 +103,8 @@ export const handleUpdateShortLink = async (req,res) => {
 }
 
 export const handleGetStats = async (req,res) => {
+  if (handleMissingRequestBody(req, res)) return;
+
   const {shortlink_id} = req.body
 
   if (!shortlink_id) {
@@ -117,7 +125,8 @@ export const handleGetStats = async (req,res) => {
 }
 
 export const handleGetClickLog = async (req,res) => {
-  handleMissingRequestBody(req,res)
+  if (handleMissingRequestBody(req, res)) return;
+
   const {shortlink_id} = req.body
 
   if (!shortlink_id) {
@@ -138,7 +147,6 @@ export const handleGetClickLog = async (req,res) => {
 }
 
 export const redirectToShortLink = async (req,res) => {
-  handleMissingRequestBody(req,res)
   const {alias} = req.params
 
   try {
