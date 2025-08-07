@@ -7,6 +7,21 @@ function handleMissingRequestBody(req,res) {
   }
 }
 
+function validateAlias(alias,res) {
+  if (alias.length >= 30) {
+    return res.status(400).json({error: 'The Alias must not be greater than 30 characters.'})
+  }
+
+  if (alias.length < 5) {
+    return res.status(400).json({error: 'The Alias must be greater than 5 characters.'})
+  }
+
+  const regex = /^[a-zA-Z0-9]+$/;
+  if (!regex.test(alias)){
+    return res.status(400).json({error: 'The Alias has invalid format.'})
+  }
+}
+
 export const shorten = async(req,res) => {
   handleMissingRequestBody(req,res)
   const {original_url} = req.body
@@ -46,7 +61,8 @@ export const deleteLink = async (req,res) => {
 }
 
 export const handleUpdateShortLink = async (req,res) => {
-  handleMissingRequestBody(req,res)
+  const missing = handleMissingRequestBody(req,res)
+  if (missing) return
 
   const {shortlink_id,alias} = req.body
 
@@ -56,6 +72,9 @@ export const handleUpdateShortLink = async (req,res) => {
   if (!alias) {
     return res.status(400).json({ error: 'Alias is required' });
   }
+
+  const invalid = validateAlias(alias,res)
+  if (invalid) return
 
   try {
     const result = await updateShortLink(shortlink_id,alias)
