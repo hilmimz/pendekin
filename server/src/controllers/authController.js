@@ -1,6 +1,5 @@
-import bcrypt from 'bcrypt'
 import validator from 'validator'
-import { createUser } from '../services/authServices.js';
+import { createUser, loginUser } from '../services/authServices.js';
 
 function handleMissingRequestBody(req,res) {
   if (!req.body || typeof req.body !== 'object') {
@@ -71,11 +70,6 @@ export const register = async (req,res) => {
   if (!validateEmail(email, res)) return;
   if (!validatePassword(password, res)) return;
 
-
-  // Hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
   try {
     const result = await createUser(name,email,password)
     res.json({ message: `${email} registered succesfully` })
@@ -84,6 +78,25 @@ export const register = async (req,res) => {
       return res.status(400).json({ error: error.message })
     }
 
+    res.status(500).json({ error })
+  }
+}
+
+export const login = async (req,res) => {
+  if (!handleMissingRequestBody(req, res)) return;
+
+  const {email, password} = req.body
+
+  if (!validateEmail(email, res)) return;
+  if (!validatePassword(password, res)) return;
+
+  try {
+    const result = await loginUser(email,password)
+    res.json({ message: result })
+  } catch (error) {
+    if (error.message === "Invalid credentials") {
+      return res.status(400).json({ error: error.message })
+    }
     res.status(500).json({ error })
   }
 }
