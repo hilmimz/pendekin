@@ -29,7 +29,7 @@ function validateAlias(alias,res) {
 }
 
 export const shorten = async(req,res) => {
-  if (handleMissingRequestBody(req, res)) return;
+  if (!handleMissingRequestBody(req, res)) return;
 
   const {original_url} = req.body
 
@@ -38,7 +38,7 @@ export const shorten = async(req,res) => {
   }
 
   try {
-    const result = await createShortLink(original_url)
+    const result = await createShortLink(original_url, req.user)
     res.json({ short_link: `${process.env.BASE_URL}/${result.alias}` })
   } catch (error) {
     res.status(500).json({ error })
@@ -46,7 +46,7 @@ export const shorten = async(req,res) => {
 }
 
 export const deleteLink = async (req,res) => {
-  if (handleMissingRequestBody(req, res)) return;
+  if (!handleMissingRequestBody(req, res)) return;
 
   const {shortlink_id} = req.body
 
@@ -55,7 +55,7 @@ export const deleteLink = async (req,res) => {
   }
 
   try {
-    const result = await deleteShortLink(shortlink_id)
+    const result = await deleteShortLink(shortlink_id, req.user)
     res.json({
       message: "Short link deleted succesfully",
       shortlink_id: `${shortlink_id}`
@@ -64,12 +64,15 @@ export const deleteLink = async (req,res) => {
     if (error.message === "Short link not found") {
       return res.status(400).json({ error: error.message })
     }
+    if (error.message === "Not authorized to delete this link") {
+      return res.status(400).json({ error: error.message })
+    }
     return res.status(500).json({ error })
   }
 }
 
 export const handleUpdateShortLink = async (req,res) => {
-  if (handleMissingRequestBody(req, res)) return;
+  if (!handleMissingRequestBody(req, res)) return;
 
   const {shortlink_id,alias} = req.body
 
@@ -80,16 +83,19 @@ export const handleUpdateShortLink = async (req,res) => {
     return res.status(400).json({ error: 'Alias is required' });
   }
 
-  if (validateAlias(alias,res)) return;
+  if (!validateAlias(alias,res)) return;
 
   try {
-    const result = await updateShortLink(shortlink_id,alias)
+    const result = await updateShortLink(shortlink_id,alias,req.user)
     res.json({
       message: "Short link updated succesfully",
       shortlink_id: `${shortlink_id}`
     })
   } catch (error) {
     if (error.message === "Short link not found") {
+      return res.status(400).json({ error: error.message })
+    }
+    if (error.message === "Not authorized to update this link") {
       return res.status(400).json({ error: error.message })
     }
     if (error.message === "Alias is not available") {
@@ -103,7 +109,7 @@ export const handleUpdateShortLink = async (req,res) => {
 }
 
 export const handleGetStats = async (req,res) => {
-  if (handleMissingRequestBody(req, res)) return;
+  if (!handleMissingRequestBody(req, res)) return;
 
   const {shortlink_id} = req.body
 
@@ -112,7 +118,7 @@ export const handleGetStats = async (req,res) => {
   }
 
   try {
-    const result = await getStats(shortlink_id)
+    const result = await getStats(shortlink_id,req.user)
     res.json({
       click_count: result
     })
@@ -120,12 +126,15 @@ export const handleGetStats = async (req,res) => {
     if (error.message === "Short link not found") {
       return res.status(400).json({ error: error.message })
     }
+    if (error.message === "Not authorized to see link click count") {
+      return res.status(400).json({ error: error.message })
+    }
     return res.status(500).json({ error })
   }
 }
 
 export const handleGetClickLog = async (req,res) => {
-  if (handleMissingRequestBody(req, res)) return;
+  if (!handleMissingRequestBody(req, res)) return;
 
   const {shortlink_id} = req.body
 
@@ -134,12 +143,15 @@ export const handleGetClickLog = async (req,res) => {
   }
 
   try {
-    const result = await getClickLog(shortlink_id)
+    const result = await getClickLog(shortlink_id,req.user)
     res.json({
       click_log: result
     })
   } catch (error) {
     if (error.message === "Short link not found") {
+      return res.status(400).json({ error: error.message })
+    }
+    if (error.message === "Not authorized to see link click log") {
       return res.status(400).json({ error: error.message })
     }
     return res.status(500).json({ error })

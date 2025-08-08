@@ -1,12 +1,14 @@
 import prisma from "../config/prisma.js"
-import {nanoid} from 'nanoid'
+import {customAlphabet } from 'nanoid'
 
 function generateAlias(length = 6) {
-  return nanoid(length)
+  const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', length)
+  const alias = nanoid()
+  return alias
 }
 
 // =================== Short Link CRUD (START) =============================
-export const createShortLink = async(original_url) => {
+export const createShortLink = async(original_url, user) => {
   let alias
   while (true) {
     alias = generateAlias()
@@ -23,13 +25,13 @@ export const createShortLink = async(original_url) => {
     data: {
       original_url: original_url,
       alias: alias,
-      userId: 1
+      userId: user.id
     }
   })
 
 }
 
-export const deleteShortLink = async (shortlink_id) => {
+export const deleteShortLink = async (shortlink_id, user) => {
   const existingShortLink = await prisma.shortLink.findUnique({
       where: { id:shortlink_id },
   })
@@ -38,18 +40,26 @@ export const deleteShortLink = async (shortlink_id) => {
     throw new Error("Short link not found")
   }
 
+  if (existingShortLink.userId !== user.id) {
+    throw new Error('Not authorized to delete this link');
+  }
+
   return await prisma.shortLink.delete({
     where: {id:shortlink_id}
   })
 }
 
-export const updateShortLink = async (shortlink_id, alias) => {
+export const updateShortLink = async (shortlink_id, alias, user) => {
   const existingShortLink = await prisma.shortLink.findUnique({
       where: { id:shortlink_id },
   })
 
   if (!existingShortLink) {
     throw new Error("Short link not found")
+  }
+
+  if (existingShortLink.userId !== user.id) {
+    throw new Error('Not authorized to update this link');
   }
 
   if (alias.length < 5) {
@@ -72,7 +82,7 @@ export const updateShortLink = async (shortlink_id, alias) => {
   })
 }
 
-export const getStats = async (shortlink_id) => {
+export const getStats = async (shortlink_id,user) => {
   const existingShortLink = await prisma.shortLink.findUnique({
       where: { id:shortlink_id },
   })
@@ -81,16 +91,24 @@ export const getStats = async (shortlink_id) => {
     throw new Error("Short link not found")
   }
 
+  if (existingShortLink.userId !== user.id) {
+    throw new Error('Not authorized to see link click count');
+  }
+
   return existingShortLink.click_count
 }
 
-export const getClickLog = async (shortlink_id) => {
+export const getClickLog = async (shortlink_id,user) => {
   const existingShortLink = await prisma.shortLink.findUnique({
       where: { id:shortlink_id },
   })
 
   if (!existingShortLink) {
     throw new Error("Short link not found")
+  }
+
+  if (existingShortLink.userId !== user.id) {
+    throw new Error('Not authorized to see link click log');
   }
 
   return await prisma.clickLog.findMany({
