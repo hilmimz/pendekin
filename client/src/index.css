@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Gilroy", ui-sans-serif, system-ui;
+
+  --color-primary: #732255;
+  --color-secondary: #E55050;
+  --color-tertiary: #B2C6D5;
+  --color-tertiary-hover: #8fb6d4;
+  --color-accent: #E7F2E4;
+  --color-accent-hover: #daeed4;
+  --color-neutral-white: #D9D9D9;
+  --color-neutral-gray: #2A2A2A;
+  --color-neutral-gray-hover: #181818;
+}
+
+body { @apply font-sans; }
