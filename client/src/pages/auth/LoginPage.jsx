@@ -1,6 +1,7 @@
 import Navbar from "../../components/auth/Navbar"
 import InputField from "../../components/InputField"
 import Button from "../../components/auth/Button"
+import { Link } from "react-router-dom"
 
 export default function LoginPage(params) {
   return(
@@ -27,7 +28,7 @@ export default function LoginPage(params) {
             <Button title="Login"/>
             <div className="flex gap-1 pb-35">
               <h3>Don't have an account yet?</h3>
-              <span className="text-primary font-medium cursor-pointer underline">Register</span>
+              <span className="text-primary font-medium cursor-pointer underline"><Link to="/register">Register</Link></span>
             </div>
           </div>
         </div>
