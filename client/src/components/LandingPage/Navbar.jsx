@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 export default function Navbar() {
   return(
     <nav className="flex justify-between items-center content-start py-3 px-[20vw] bg-primary">
-      <h1 className="font-extrabold text-3xl text-secondary"><a href="">PENDEKIN</a></h1>
+      <header className="font-extrabold text-3xl text-secondary"><a href="">PENDEKIN</a></header>
       <ul className="flex items-center gap-x-10 text-white">
         <li className="font-medium cursor-pointer"><ScrollLink to="features" smooth={true} duration={500}>Features</ScrollLink></li>
         <li className="font-medium cursor-pointer"><ScrollLink to="how-to-use" smooth={true} duration={500}>How To Use?</ScrollLink></li>
