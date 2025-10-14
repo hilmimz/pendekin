@@ -12,7 +12,7 @@ export default function Navbar() {
           <button className="font-semibold px-7 py-1 bg-neutral-gray rounded-sm border border-primary hover:bg-neutral-gray-hover hover:border-white duration-200 cursor-pointer"><Link to="/login">Login</Link></button>
         </li>
         <li>
-          <button className="font-semibold px-7 py-1 bg-tertiary text-black rounded-sm border border-primary hover:bg-tertiary-hover hover:border-white duration-200 cursor-pointer">Register</button>
+          <button className="font-semibold px-7 py-1 bg-tertiary text-black rounded-sm border border-primary hover:bg-tertiary-hover hover:border-white duration-200 cursor-pointer"><Link to="/register">Register</Link></button>
         </li>
         </ul>
     </nav>
