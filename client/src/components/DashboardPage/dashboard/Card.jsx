@@ -1,5 +1,5 @@
 import { useState } from "react"
-import InputField from "../InputField"
+import InputField from "../../InputField"
 import { QRCodeCanvas } from "qrcode.react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faD, faDownload } from "@fortawesome/free-solid-svg-icons"

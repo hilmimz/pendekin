@@ -4,7 +4,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons"
 
 export default function Navbar({active}) {
   return(
-    <nav className="bg-primary flex px-4 py-2 mx-10 justify-between items-center rounded-sm">
+    <nav className="bg-primary flex px-25 py-2 mx-10 justify-between items-center rounded-sm">
       <header className="text-secondary font-extrabold text-3xl flex-1">PENDEKIN</header>
       <div className="flex gap-12 text-white flex-1 justify-center">
         <h3>Dashboard</h3>

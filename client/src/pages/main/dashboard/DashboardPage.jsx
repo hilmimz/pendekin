@@ -1,5 +1,5 @@
 import Navbar from "../../../components/DashboardPage/Navbar"
-import Card from "../../../components/DashboardPage/Card"
+import Card from "../../../components/DashboardPage/dashboard/Card"
 
 export default function DashboardPage(params) {
   return(

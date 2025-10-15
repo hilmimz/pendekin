@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 @theme {
   --font-sans: "Gilroy", ui-sans-serif, system-ui;
 
