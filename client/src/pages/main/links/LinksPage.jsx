@@ -17,11 +17,11 @@ export default function DashboardPage(params) {
             <Button title="Create Link" icon={faPlus} classname="bg-secondary hover:bg-secondary-hover text-white"/>
           </div>
           <div className="flex items-center gap-2">
-            <SearchBar classname="w-80"/>
+            <SearchBar classname="w-80" placeholder="search..." textColor="black"/>
             <Button title="Filters" icon={faSliders} classname="bg-white hover:bg-gray-200 text-black"/>
           </div>
         </section>
-        <hr class="border-t border-gray-400 my-6 mt-5" />
+        <hr class="border-t border-gray-200 my-6 mt-5" />
         <div className="flex items-center justify-between">
           <div className="flex gap-6">
             <div className="flex items-center gap-1">
@@ -32,7 +32,9 @@ export default function DashboardPage(params) {
           </div>
           <Button title="Active" icon={faAngleDown} classname="bg-white hover:bg-gray-200 text-black"/>
         </div>
-        <Card/>
+        <Card title="pendekin.com" shortURL="pendekin.com/j7fJu" destinationURL="https://pendekin.com" tags={["social media"]}/>
+        <Card title="My Github Portofolio" shortURL="pendekin.com/my-porto" destinationURL="https://github.com/hilmimz" tags={[""]}/>
+        <Card title="Linkedin" shortURL="pendekin.com/my-linkidn" destinationURL="https://linkedin.com/hilmimz" tags={["job"]}/>
       </main>
     </div>
   )
