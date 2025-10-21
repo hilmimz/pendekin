@@ -8,6 +8,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/main/dashboard/DashboardPage';
 import LinksPage from './pages/main/links/LinksPage';
+import AnalyticsPage from './pages/main/analytics/AnalyticsPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/register" element={<RegisterPage/>}/>
       <Route path="/dashboard" element={<DashboardPage/>}/>
       <Route path="/links" element={<LinksPage/>}/>
+      <Route path="/analytics" element={<AnalyticsPage/>}/>
     </Routes>
   )
 }
