@@ -32,15 +32,19 @@ export const shorten = async(req,res) => {
   if (!handleMissingRequestBody(req, res)) return;
 
   const {original_url} = req.body
+  const {alias} = req.body
 
   if (!original_url) {
     return res.status(400).json({ error: 'URL is required' })
   }
 
   try {
-    const result = await createShortLink(original_url, req.user)
+    const result = await createShortLink(original_url, alias, req.user)
     res.json({ short_link: `${process.env.BASE_URL}/${result.alias}` })
   } catch (error) {
+    if (error.message === "Alias is not available") {
+      return res.status(409).json({ error: error.message })
+    }
     res.status(500).json({ error })
   }
 }

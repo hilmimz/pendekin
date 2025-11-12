@@ -10,7 +10,14 @@ dotenv.config()
 const app = express()
 const port = process.env.SERVER_PORT
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",         // dev frontend
+    "https://pendekin.id"             // prod frontend (sesuaikan)
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use('/api/shortlink', authenticateJWT, shortLinkRoutes);

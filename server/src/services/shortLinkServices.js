@@ -8,16 +8,25 @@ function generateAlias(length = 6) {
 }
 
 // =================== Short Link CRUD (START) =============================
-export const createShortLink = async(original_url, user) => {
-  let alias
-  while (true) {
-    alias = generateAlias()
+export const createShortLink = async(original_url, alias, user) => {
+  if (alias != ""){
     const isAliasExist = await prisma.shortLink.findUnique({
-      where: { alias },
-    });
+        where: { alias },
+      })
 
-    if (!isAliasExist) {
-      break
+    if (isAliasExist) {
+      throw new Error("Alias is not available")
+    }
+  } else {
+    while (true) {
+      alias = generateAlias()
+      const isAliasExist = await prisma.shortLink.findUnique({
+        where: { alias },
+      });
+  
+      if (!isAliasExist) {
+        break
+      }
     }
   }
 

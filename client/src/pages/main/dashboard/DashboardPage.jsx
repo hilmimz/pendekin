@@ -1,7 +1,7 @@
 import Navbar from "../../../components/DashboardPage/Navbar"
 import Card from "../../../components/DashboardPage/dashboard/Card"
 
-export default function DashboardPage(params) {
+export default function DashboardPage() {
   return(
     <div className="bg-background-gray h-screen pt-5">
       <Navbar/>
