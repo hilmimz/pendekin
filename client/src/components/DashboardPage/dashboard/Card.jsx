@@ -73,7 +73,7 @@ export default function Card() {
             <label htmlFor="qrcode-checkbox">Also create QR Code?</label>
           </div>
         </div>
-        <button type="submit" disabled={loading || url == "" ? "true" : "false"} className={`${loading || url == "" ? 'bg-gray-100 text-gray-400 cursor-default' : 'bg-accent cursor-pointer hover:bg-accent-hover'} w-full p-1 rounded-sm font-medium duration-200`}>{loading ? "Processing.." : "Pendekin"}</button>
+        <button type="submit" disabled={loading || url == "" ? true : false} className={`${loading || url == "" ? 'bg-gray-100 text-gray-400 cursor-default' : 'bg-accent cursor-pointer hover:bg-accent-hover'} w-full p-1 rounded-sm font-medium duration-200`}>{loading ? "Processing.." : "Pendekin"}</button>
       </form>
       {result && (
       <div className="flex flex-col items-center justify-center mt-10 gap-1">
