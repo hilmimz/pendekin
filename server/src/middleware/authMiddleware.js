@@ -1,16 +1,14 @@
 import jwt from 'jsonwebtoken'
 
 export const authenticateJWT = async (req,res,next) => {
-  const authHeader = req.headers.authorization
+  const authToken = req.cookies.token
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authToken) {
     return res.status(401).json({ message: 'Token is required' });
   }
 
-  const token = authHeader.split(' ')[1];
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(authToken, process.env.JWT_SECRET)
     req.user = decoded
     next()
   } catch (error) {

@@ -5,6 +5,7 @@ import shortLinkRoutes from './src/routes/shortLinkRoutes.js'
 import redirectRoutes from './src/routes/redirectRoutes.js'
 import authRoutes from './src/routes/authRoutes.js'
 import { authenticateJWT } from './src/middleware/authMiddleware.js'
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 const app = express()
@@ -16,13 +17,14 @@ app.use(cors({
     "https://pendekin.id"             // prod frontend (sesuaikan)
   ],
   credentials: true
-}));
+}))
 
-app.use(express.json());
+app.use(cookieParser())
+app.use(express.json())
 
-app.use('/api/shortlink', authenticateJWT, shortLinkRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/', redirectRoutes);
+app.use('/api/shortlink', authenticateJWT, shortLinkRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/', redirectRoutes)
 
 app.listen(port, () => {
 	console.log(`App is listening on http://localhost:${port}`)

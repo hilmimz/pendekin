@@ -92,10 +92,15 @@ export const login = async (req,res) => {
 
   try {
     const result = await loginUser(email,password)
-    res.json({ message: result })
+    res.cookie("token", result.token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+    });
+    res.json(result.user);
   } catch (error) {
     if (error.message === "Invalid credentials") {
-      return res.status(400).json({ error: error.message })
+      return res.status(401).json({ error: error.message })
     }
     res.status(500).json({ error })
   }
