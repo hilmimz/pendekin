@@ -5,8 +5,10 @@ import { Link } from "react-router-dom"
 import { useState } from "react"
 import { login } from "../../lib/api"
 
-export default function LoginPage(params) {
-  const [result, setResult] = useState("")
+// TODO
+// - add loading
+
+export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState()
@@ -16,12 +18,11 @@ export default function LoginPage(params) {
       e.preventDefault()
       setLoading(true)
       setError("")
-      setResult("")
   
       try {
+        // await new Promise(r => setTimeout(r, 4000))
         const data = await login({email: email, password: password})
         setResult(data)
-        // await new Promise(r => setTimeout(r, 4000))
       } catch (error) {
         setError(error.message)
       } finally {
@@ -53,7 +54,7 @@ export default function LoginPage(params) {
             </div>
               <h3 className="text-primary font-medium cursor-pointer">Forget your password?</h3>
             </div>
-            <Button type="submit" title="Login"/>
+            <Button type="submit" loading={loading} title={loading ? "Logging in..." : "Login"}/>
           </form>
             <div className="flex gap-1 pb-35">
               <h3>Don't have an account yet?</h3>
