@@ -22,7 +22,6 @@ export default function LoginPage() {
       try {
         // await new Promise(r => setTimeout(r, 4000))
         const data = await login({email: email, password: password})
-        setResult(data)
       } catch (error) {
         setError(error.message)
       } finally {

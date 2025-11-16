@@ -8,9 +8,9 @@ async function handle(res) {
   return res.json()
 }
 
-export async function shortenURL(payload) {
-  const res = await fetch(`${BASE_API_URL}/api/shortlink/create`, {
-      method: 'POST',
+async function request(url, method, payload) {
+  const res = await fetch(`${BASE_API_URL}${url}`, {
+      method,
       credentials: 'include',
       headers: { 
         'Content-Type': 'application/json'
@@ -18,17 +18,20 @@ export async function shortenURL(payload) {
       body: JSON.stringify(payload)
     }
   )
+  return res
+}
+
+export async function shortenURL(payload) {
+  const res = await request('/api/shortlink/create', 'POST', payload)
   return handle(res)
 }
 
 export async function login(payload) {
-  const res = await fetch(`${BASE_API_URL}/api/auth/login`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  })
+  const res = await request('/api/auth/login', 'POST', payload)
+  return handle(res)
+}
+
+export async function register(payload) {
+  const res = await request('/api/auth/register', 'POST', payload)
   return handle(res)
 }
