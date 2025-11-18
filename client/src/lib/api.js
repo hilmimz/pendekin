@@ -8,30 +8,32 @@ async function handle(res) {
   return res.json()
 }
 
-async function request(url, method, payload) {
-  const res = await fetch(`${BASE_API_URL}${url}`, {
-      method,
-      credentials: 'include',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+async function request(url, { method = "GET", payload } = {}) {
+  const option = {
+    method,
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
     }
-  )
-  return res
+  }
+
+  if (payload) {
+    option.body = JSON.stringify(payload)
+  }
+
+  const res = await fetch(`${BASE_API_URL}${url}`, option)
+
+  return handle(res)
 }
 
 export async function shortenURL(payload) {
-  const res = await request('/api/shortlink/create', 'POST', payload)
-  return handle(res)
+  return request('/api/shortlink/create', {method: 'POST', payload})
 }
 
 export async function login(payload) {
-  const res = await request('/api/auth/login', 'POST', payload)
-  return handle(res)
+  return request('/api/auth/login', {method: 'POST', payload})
 }
 
 export async function register(payload) {
-  const res = await request('/api/auth/register', 'POST', payload)
-  return handle(res)
+  return request('/api/auth/register', {method: 'POST', payload})
 }
