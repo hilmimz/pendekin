@@ -1,9 +1,10 @@
 import Navbar from "../../components/auth/Navbar"
 import InputField from "../../components/InputField"
 import Button from "../../components/auth/Button"
-import { Link } from "react-router-dom"
+import { Link, redirect, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { login } from "../../lib/api"
+import { useAuth } from "../../context/AuthContext"
 
 // TODO
 // - add loading
@@ -13,6 +14,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
+  const {setUser} = useAuth()
+  const navigate = useNavigate()
 
   async function handleLogin(e) {
       e.preventDefault()
@@ -22,6 +25,8 @@ export default function LoginPage() {
       try {
         // await new Promise(r => setTimeout(r, 4000))
         const data = await login({email: email, password: password})
+        setUser(data)
+        navigate("/dashboard")
       } catch (error) {
         setError(error.message)
       } finally {

@@ -37,3 +37,7 @@ export async function login(payload) {
 export async function register(payload) {
   return request('/api/auth/register', {method: 'POST', payload})
 }
+
+export async function fethcMe() {
+  return request('/api/auth/me')
+}

@@ -9,16 +9,22 @@ import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/main/dashboard/DashboardPage';
 import LinksPage from './pages/main/links/LinksPage';
 import AnalyticsPage from './pages/main/analytics/AnalyticsPage';
+import ProtectedRoute from './routes/ProtectedRoute';
+import { GuestRoute } from './routes/GuestRoute';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage/>}/>
-      <Route path="/login" element={<LoginPage/>}/>
-      <Route path="/register" element={<RegisterPage/>}/>
-      <Route path="/dashboard" element={<DashboardPage/>}/>
-      <Route path="/links" element={<LinksPage/>}/>
-      <Route path="/analytics" element={<AnalyticsPage/>}/>
+      <Route element={<ProtectedRoute/>}>
+        <Route path="/dashboard" element={<DashboardPage/>}/>
+        <Route path="/links" element={<LinksPage/>}/>
+        <Route path="/analytics" element={<AnalyticsPage/>}/>
+      </Route>
+      <Route element={<GuestRoute/>}>
+        <Route path="/" element={<LandingPage/>}/>
+        <Route path="/login" element={<LoginPage/>}/>
+        <Route path="/register" element={<RegisterPage/>}/>
+      </Route>
     </Routes>
   )
 }
