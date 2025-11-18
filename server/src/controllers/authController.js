@@ -106,3 +106,12 @@ export const login = async (req,res) => {
   }
 }
 
+export const me = async (req,res) => {
+  const {id, name, email} = req.user || {}
+  return res.json({
+    id,
+    name,
+    email
+  })
+}
+
